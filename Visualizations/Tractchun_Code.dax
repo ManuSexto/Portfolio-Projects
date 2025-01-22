@@ -1,0 +1,23 @@
+﻿DEFINE 
+---- MODEL MEASURES BEGIN ----
+MEASURE 'DAX Medidas'[% Positivo] = DIVIDE([Tickets Positivos] , [Total tickets] , 0)
+MEASURE 'DAX Medidas'[% Problema] = DIVIDE([Tickets Problemas] , [Total tickets] , 0)
+MEASURE 'DAX Medidas'[Promedio Días Abierto] = AVERAGE(f_Tickets[Días Resolución])
+MEASURE 'DAX Medidas'[Rank dias abierto] = RANKX( ALL(d_Agentes), [Promedio Días Abierto], ,ASC)
+MEASURE 'DAX Medidas'[Rank satisfacción] = RANKX( ALL(d_Agentes), [Satisfacción Media])
+MEASURE 'DAX Medidas'[Rank Tickets] = RANKX( ALL(d_Agentes) , [Total tickets])
+MEASURE 'DAX Medidas'[Rank Tickets ALL] = RANKX( ALLSELECTED(d_Agentes) , [Total tickets])
+MEASURE 'DAX Medidas'[Satisfacción Media] = AVERAGE(f_Tickets[Satisfacción])
+MEASURE 'DAX Medidas'[Tickets por Agente] = ROUND( DIVIDE([Total tickets], [Total Agentes], 0 ) , 0)
+MEASURE 'DAX Medidas'[Tickets por agente ALLSELECTED] = CALCULATE([Tickets por Agente] , ALLSELECTED( f_Tickets))
+MEASURE 'DAX Medidas'[Tickets por Agente Var] = [Total tickets] - [Tickets por agente ALLSELECTED]
+MEASURE 'DAX Medidas'[Tickets Positivos] = CALCULATE([Total tickets] , 'd_Satisfacción'[Estatus] = "Positivo")
+MEASURE 'DAX Medidas'[Tickets pr agente Var Grup] = IF([Tickets por Agente Var] >= 0, "Arriba del promedio", "Debajo del promedio")
+MEASURE 'DAX Medidas'[Tickets Problemas] = CALCULATE([Total tickets] , f_Tickets[Tipo] = "Problema")
+MEASURE 'DAX Medidas'[Total Agentes] = COUNTROWS(d_Agentes)
+MEASURE 'DAX Medidas'[Total tickets] = IF( ISBLANK( COUNTROWS(f_Tickets)), 0, COUNTROWS(f_Tickets))
+MEASURE 'DAX Medidas'[Total Tickets ALL] = CALCULATE([Total tickets] , ALL( f_Tickets))
+MEASURE 'DAX Medidas'[Total Tickets ALLSELECTED] = CALCULATE([Total tickets] , ALLSELECTED( f_Tickets))
+MEASURE 'DAX Medidas'[Total Tickets NOBLANK] = COUNTROWS(f_Tickets)
+---- MODEL MEASURES END ----
+
