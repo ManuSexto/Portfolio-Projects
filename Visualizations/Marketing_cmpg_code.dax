@@ -1,0 +1,155 @@
+﻿DEFINE 
+---- MODEL MEASURES BEGIN ----
+MEASURE 'Dax Measures'[Acceptance_Cmp1] = 
+DIVIDE(
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Campaigns] = "Campaign 1" && Dim_Campaigns2[Value] = 1)),
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Campaigns] = "Campaign 1")),
+    0
+)
+MEASURE 'Dax Measures'[Acceptance_Cmp2] = 
+DIVIDE(
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Campaigns] = "Campaign 2" && Dim_Campaigns2[Value] = 1)),
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Campaigns] = "Campaign 2")),
+    0
+)
+MEASURE 'Dax Measures'[Acceptance_Cmp3] = 
+DIVIDE(
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Campaigns] = "Campaign 3" && Dim_Campaigns2[Value] = 1)),
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Campaigns] = "Campaign 3")),
+    0
+)
+MEASURE 'Dax Measures'[Acceptance_Cmp4] = 
+DIVIDE(
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Campaigns] = "Campaign 4" && Dim_Campaigns2[Value] = 1)),
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Campaigns] = "Campaign 4")),
+    0
+)
+MEASURE 'Dax Measures'[Acceptance_Cmp5] = 
+DIVIDE(
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Campaigns] = "Campaign 5" && Dim_Campaigns2[Value] = 1)),
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Campaigns] = "Campaign 5")),
+    0
+)
+MEASURE 'Dax Measures'[Acceptance_CmpLast] = 
+DIVIDE(
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Campaigns] = "Last Campaign" && Dim_Campaigns2[Value] = 1)),
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Campaigns] = "Last Campaign")),
+    0
+)
+MEASURE 'Dax Measures'[Aceptance Rate] = DIVIDE(
+    COUNTROWS(FILTER(Dim_Campaigns2, Dim_Campaigns2[Value] = 1)),
+    COUNTROWS(Dim_Campaigns2),
+    0
+)
+MEASURE 'Dax Measures'[Average Age] = AVERAGE(Dim_Customers[Age])
+MEASURE 'Dax Measures'[Average Children] = AVERAGE(Dim_Customers[Total_Children])
+MEASURE 'Dax Measures'[Average Income] = AVERAGE(Dim_Customers[Income])
+MEASURE 'Dax Measures'[Average Total Products] = AVERAGE(Dim_Products[Total_Amount])
+MEASURE 'Dax Measures'[Catalog_Sales] = SUM(Fact_Sales[NumCatalogPurchases])
+
+MEASURE 'Dax Measures'[Clients_per_cmpg] = 
+CALCULATE(
+    COUNTROWS(Dim_Campaigns2),
+    Dim_Campaigns2[Value] = 1
+)
+MEASURE 'Dax Measures'[Complain %] = DIVIDE( [Total Complains], [Total Clients], 0 )
+MEASURE 'Dax Measures'[Most_Sold_Product] = 
+SWITCH(
+    TRUE(),
+    SUM(Dim_Products[MntWines]) = MAXX(
+        {SUM(Dim_Products[MntWines]), SUM(Dim_Products[MntFruits]), 
+         SUM(Dim_Products[MntMeatProducts]), SUM(Dim_Products[MntFishProducts]), 
+         SUM(Dim_Products[MntSweetProducts]), SUM(Dim_Products[MntGoldProds])}, [Value]),
+    "Wines",
+    SUM(Dim_Products[MntFruits]) = MAXX(
+        {SUM(Dim_Products[MntWines]), SUM(Dim_Products[MntFruits]), 
+         SUM(Dim_Products[MntMeatProducts]), SUM(Dim_Products[MntFishProducts]), 
+         SUM(Dim_Products[MntSweetProducts]), SUM(Dim_Products[MntGoldProds])}, [Value]),
+    "Fruits",
+    SUM(Dim_Products[MntMeatProducts]) = MAXX(
+        {SUM(Dim_Products[MntWines]), SUM(Dim_Products[MntFruits]), 
+         SUM(Dim_Products[MntMeatProducts]), SUM(Dim_Products[MntFishProducts]), 
+         SUM(Dim_Products[MntSweetProducts]), SUM(Dim_Products[MntGoldProds])}, [Value]),
+    "Meat",
+    SUM(Dim_Products[MntFishProducts]) = MAXX(
+        {SUM(Dim_Products[MntWines]), SUM(Dim_Products[MntFruits]), 
+         SUM(Dim_Products[MntMeatProducts]), SUM(Dim_Products[MntFishProducts]), 
+         SUM(Dim_Products[MntSweetProducts]), SUM(Dim_Products[MntGoldProds])}, [Value]),
+    "Fish",
+    SUM(Dim_Products[MntSweetProducts]) = MAXX(
+        {SUM(Dim_Products[MntWines]), SUM(Dim_Products[MntFruits]), 
+         SUM(Dim_Products[MntMeatProducts]), SUM(Dim_Products[MntFishProducts]), 
+         SUM(Dim_Products[MntSweetProducts]), SUM(Dim_Products[MntGoldProds])}, [Value]),
+    "Sweets",
+    "Gold"
+)
+
+MEASURE 'Dax Measures'[Revenue_Cmp_last] = 
+CALCULATE(
+    SUM(Dim_Campaigns2[Z_Revenue]),
+    Dim_Campaigns2[Campaigns] = "Last Campaign" && Dim_Campaigns2[Value] = 1
+)
+MEASURE 'Dax Measures'[Revenue_Cmp1] = 
+CALCULATE(
+    SUM(Dim_Campaigns2[Z_Revenue]),
+    Dim_Campaigns2[Campaigns] = "Campaign 1" && Dim_Campaigns2[Value] = 1
+)
+MEASURE 'Dax Measures'[Revenue_Cmp2] = 
+CALCULATE(
+    SUM(Dim_Campaigns2[Z_Revenue]),
+    Dim_Campaigns2[Campaigns] = "Campaign 2" && Dim_Campaigns2[Value] = 1
+)
+MEASURE 'Dax Measures'[Revenue_Cmp3] = 
+CALCULATE(
+    SUM(Dim_Campaigns2[Z_Revenue]),
+    Dim_Campaigns2[Campaigns] = "Campaign 3" && Dim_Campaigns2[Value] = 1
+)
+MEASURE 'Dax Measures'[Revenue_Cmp4] = 
+CALCULATE(
+    SUM(Dim_Campaigns2[Z_Revenue]),
+    Dim_Campaigns2[Campaigns] = "Campaign 4" && Dim_Campaigns2[Value] = 1
+)
+MEASURE 'Dax Measures'[Revenue_Cmp5] = 
+CALCULATE(
+    SUM(Dim_Campaigns2[Z_Revenue]),
+    Dim_Campaigns2[Campaigns] = "Campaign 5" && Dim_Campaigns2[Value] = 1
+)
+MEASURE 'Dax Measures'[Revenue_per_Aceptedcmpg] = 
+CALCULATE(
+    SUM(Dim_Campaigns2[Z_Revenue]),
+    Dim_Campaigns2[Value] = 1
+)
+MEASURE 'Dax Measures'[Store_Sales] = SUM(Fact_Sales[NumStorePurchases])
+
+MEASURE 'Dax Measures'[Top_Channel] = 
+SWITCH(
+    TRUE(),
+    SUM(Fact_Sales[NumWebPurchases]) = MAXX(
+        {SUM(Fact_Sales[NumWebPurchases]), 
+         SUM(Fact_Sales[NumCatalogPurchases]), 
+         SUM(Fact_Sales[NumStorePurchases])}, 
+        [Value]),
+    "Web",
+    SUM(Fact_Sales[NumCatalogPurchases]) = MAXX(
+        {SUM(Fact_Sales[NumWebPurchases]), 
+         SUM(Fact_Sales[NumCatalogPurchases]), 
+         SUM(Fact_Sales[NumStorePurchases])}, 
+        [Value]),
+    "Catalog",
+    "Store"
+)
+MEASURE 'Dax Measures'[Total Clients] = DISTINCTCOUNT(Dim_Customers[Costumer_ID])
+MEASURE 'Dax Measures'[Total Complains] = SUM(Fact_Sales[Complain])
+MEASURE 'Dax Measures'[Total Fish] = SUM(Dim_Products[MntFishProducts])
+MEASURE 'Dax Measures'[Total Fruits] = SUM(Dim_Products[MntFruits])
+MEASURE 'Dax Measures'[Total Gold] = SUM(Dim_Products[MntGoldProds])
+MEASURE 'Dax Measures'[Total Meat] = SUM(Dim_Products[MntMeatProducts])
+MEASURE 'Dax Measures'[Total Products] = SUM(Dim_Products[Total_Amount])
+MEASURE 'Dax Measures'[Total Sweet] = SUM(Dim_Products[MntSweetProducts])
+MEASURE 'Dax Measures'[Total Wines] = SUM(Dim_Products[MntWines])
+MEASURE 'Dax Measures'[TotalRevenue] = 
+SUM(Dim_Campaigns2[Z_Revenue])
+MEASURE 'Dax Measures'[Web_Sales] = SUM(Fact_Sales[NumWebPurchases])
+
+---- MODEL MEASURES END ----
+
